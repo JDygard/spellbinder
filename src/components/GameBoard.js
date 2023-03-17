@@ -10,6 +10,7 @@ import {
   addSubmittedWord,
   clearSelectedLetters,
 } from "../slices/gameSlice";
+import socket from "../utils/socket";
 
 const GameBoard = () => {
     const [inputValue, setInputValue] = useState("");
@@ -24,6 +25,7 @@ const GameBoard = () => {
         console.log("Submitting word:", inputValue);
         // You'll need to implement the logic to validate and submit the word
         // using the Oxford dictionary API and Socket.io
+        socket.emit("submitWord", inputValue);
     
         // Replace used letter tiles with new ones and clear the selected letters
         dispatch(addSubmittedWord(inputValue));
@@ -31,7 +33,6 @@ const GameBoard = () => {
         dispatch(clearSelectedLetters());
         setInputValue("");
     };
-    
 
     const handleInputValueChange = (e) => {
         const newInputValue = e.target.value.toUpperCase();
