@@ -1,33 +1,46 @@
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setBoard, replaceLetters } from "../slices/gameSlice";
+import { setBoard, replaceLetters, addSubmittedWord } from "../slices/gameSlice";
+import socket from "../utils/socket";
 
-const letterFrequency =
-  "EEEEEEEEEEEEEEEEEEEAAAAAAAAAAIIIIIIIIINNNNNNNOOOOOOOOTTTTTTTRRRRRRSSSSSLLLLLCCCCCUUUUUDMMMMPHFFBBGYWKVJXQZ";
-
-const randomLetter = () =>
-  letterFrequency[Math.floor(Math.random() * letterFrequency.length)];
-
-const useBoard = (size) => {
+const useBoard = () => {
   const dispatch = useDispatch();
   const board = useSelector((state) => state.game.board);
+  const [tempSelectedLetters, setTempSelectedLetters] = useState([]);
 
   const generateBoard = () => {
-    const newBoard = Array.from({ length: size }, () =>
-      Array.from({ length: size }, () => randomLetter())
-    );
-    dispatch(setBoard(newBoard));
+    let size = 4;
+    socket.emit("generateBoard", size);
   };
 
   const replaceSelectedLetters = (selectedLetters) => {
-    const newBoard = [...board].map((row) => [...row]);
-    for (const pos of selectedLetters) {
-      newBoard[pos.row][pos.col] = randomLetter();
-    }
-    dispatch(replaceLetters(newBoard));
+    socket.emit("replaceSelectedLetters", { board, selectedLetters });
   };
-  
 
-  return { board, generateBoard, replaceSelectedLetters };
+  // Listen for events from the server
+  useEffect(() => {
+    const handleWordAccepted = (acceptedWord) => {
+      dispatch(addSubmittedWord(acceptedWord));
+      replaceSelectedLetters(tempSelectedLetters);
+      setTempSelectedLetters([]); // Clear tempSelectedLetters
+    };
+
+    socket.on("wordAccepted", handleWordAccepted);
+    socket.on("newBoard", (newBoard) => {
+      dispatch(setBoard(newBoard));
+    });
+    socket.on("updatedBoard", (updatedBoard) => {
+      dispatch(replaceLetters(updatedBoard));
+    });
+
+    return () => {
+      socket.off("newBoard");
+      socket.off("updatedBoard");
+      socket.off("wordAccepted", handleWordAccepted);
+    };
+  }, [dispatch, tempSelectedLetters, replaceSelectedLetters]);
+
+  return { board, generateBoard, replaceSelectedLetters, setTempSelectedLetters };
 };
 
 export default useBoard;

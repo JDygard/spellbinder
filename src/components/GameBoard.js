@@ -13,75 +13,80 @@ import {
 import socket from "../utils/socket";
 
 const GameBoard = () => {
-    const [inputValue, setInputValue] = useState("");
-    const [wordIsValid, setWordIsValid] = useState(true);
-    const { board, generateBoard, replaceSelectedLetters } = useBoard(4);
-    const { selectedLetters, handleInputChange } = useSelectedLetters();
-    const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState("");
+  const [wordIsValid, setWordIsValid] = useState(true);
+  const { selectedLetters, handleInputChange } = useSelectedLetters();
+  const {
+    board,
+    generateBoard,
+    replaceSelectedLetters,
+    setTempSelectedLetters,
+  } = useBoard();
+  const dispatch = useDispatch();
 
-    const submitWord = () => {
-        if (!wordIsValid) return;
-    
-        console.log("Submitting word:", inputValue);
-        // You'll need to implement the logic to validate and submit the word
-        // using the Oxford dictionary API and Socket.io
-        socket.emit("submitWord", inputValue);
-    
-        // Replace used letter tiles with new ones and clear the selected letters
-        dispatch(addSubmittedWord(inputValue));
-        replaceSelectedLetters(selectedLetters);
-        dispatch(clearSelectedLetters());
-        setInputValue("");
-    };
+  const submitWord = () => {
+    if (!wordIsValid) return;
+  
+    if (inputValue === "") return;
+  
+    console.log("Submitting word:", inputValue);
+    socket.emit("submitWord", inputValue);
+    // Save the selected letters in tempSelectedLetters
+    setTempSelectedLetters(selectedLetters);
+    // Clear the selected letters and input value
+    dispatch(clearSelectedLetters());
+    setInputValue("");
+  };
 
-    const handleInputValueChange = (e) => {
-        const newInputValue = e.target.value.toUpperCase();
-        setInputValue(newInputValue);
-        const valid = handleInputChange(newInputValue);
-        setWordIsValid(valid);
-    };
+  const handleInputValueChange = (e) => {
+    const newInputValue = e.target.value.toUpperCase();
+    setInputValue(newInputValue);
+    const valid = handleInputChange(newInputValue);
+    setWordIsValid(valid);
+  };
 
-    useEffect(() => {
-        generateBoard();
-    }, []);
+  useEffect(() => {
+    generateBoard();
+  }, []);
 
-    return (
-        <div className="game-board">
-            {board.map((row, rowIndex) => (
-                <div key={rowIndex} className="row">
-                    {row.map((letter, colIndex) => (
-                        <div
-                            key={`${rowIndex}-${colIndex}`}
-                            className={`letter ${selectedLetters.some((pos) => pos.row === rowIndex && pos.col === colIndex)
-                                ? 'selected'
-                                : ''
-                                }`}
-                        >
-                            {letter}
-                            <span className={`rarity-dot ${letterRarity(letter).color}`} />
-                        </div>
-                    ))}
-                </div>
-            ))}
+  return (
+    <div className="game-board">
+      {board.map((row, rowIndex) => (
+        <div key={rowIndex} className="row">
+          {row.map((letter, colIndex) => (
             <div
-                className="current-word"
-                style={{ color: wordIsValid ? "black" : "red" }}
+              key={`${rowIndex}-${colIndex}`}
+              className={`letter ${
+                selectedLetters.some((pos) => pos.row === rowIndex && pos.col === colIndex)
+                  ? "selected"
+                  : ""
+              }`}
             >
-                <h3>Current Word: {inputValue}</h3>
-                <input
-                    type="text"
-                    value={inputValue}
-                    onChange={handleInputValueChange}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            submitWord();
-                        }
-                    }}
-                />
-                <button onClick={submitWord}>Submit Word</button>
+              {letter}
+              <span className={`rarity-dot ${letterRarity(letter).color}`} />
             </div>
+          ))}
         </div>
-    );
+      ))}
+      <div
+        className="current-word"
+        style={{ color: wordIsValid ? "black" : "red" }}
+      >
+        <h3>Current Word: {inputValue}</h3>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputValueChange}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              submitWord();
+            }
+          }}
+        />
+        <button onClick={submitWord}>Submit Word</button>
+      </div>
+    </div>
+  );
 };
 
 export default GameBoard;
