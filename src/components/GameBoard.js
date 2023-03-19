@@ -10,7 +10,7 @@ import {
   addSubmittedWord,
   clearSelectedLetters,
 } from "../slices/gameSlice";
-import socket from "../utils/socket";
+import { getSocket } from "../utils/socket";
 
 const GameBoard = () => {
   const [inputValue, setInputValue] = useState("");
@@ -30,7 +30,7 @@ const GameBoard = () => {
     if (inputValue === "") return;
   
     console.log("Submitting word:", inputValue);
-    socket.emit("submitWord", inputValue);
+    getSocket().emit("submitWord", inputValue);
     // Save the selected letters in tempSelectedLetters
     setTempSelectedLetters(selectedLetters);
     // Clear the selected letters and input value

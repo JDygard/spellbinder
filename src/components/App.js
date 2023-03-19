@@ -1,20 +1,46 @@
-import React from 'react';
+// App.js
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import GameBoard from './GameBoard';
 import SubmittedWordsList from './SubmittedWordsList';
 import PlayerStats from './PlayerStats';
 import '../styles/App.css';
+import Login from './Login';
+import { login } from '../slices/gameSlice';
+import { initializeSocket } from '../utils/socket'; // Add this import
 
 function App() {
+  const loggedIn = useSelector((state) => state.game.loggedIn);
+  const dispatch = useDispatch();
+
+  const handleLogin = () => {
+    dispatch(login());
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      initializeSocket(token);
+    }
+  }, [loggedIn]);
+
   return (
     <div className="App">
-      <PlayerStats />
-      <GameBoard />
-      <SubmittedWordsList />
+      {!loggedIn ? (
+        <Login onLogin={handleLogin} />
+      ) : (
+        <>
+          <PlayerStats />
+          <GameBoard />
+          <SubmittedWordsList />
+        </>
+      )}
     </div>
   );
 }
 
 export default App;
+
 
 
 /*

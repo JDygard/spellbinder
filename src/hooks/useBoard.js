@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setBoard, replaceLetters, addSubmittedWord } from "../slices/gameSlice";
-import socket from "../utils/socket";
+import { getSocket } from "../utils/socket";
 
 const useBoard = () => {
   const dispatch = useDispatch();
@@ -10,11 +10,11 @@ const useBoard = () => {
 
   const generateBoard = () => {
     let size = 4;
-    socket.emit("generateBoard", size);
+    getSocket().emit("generateBoard", size);
   };
 
   const replaceSelectedLetters = (selectedLetters) => {
-    socket.emit("replaceSelectedLetters", { board, selectedLetters });
+    getSocket().emit("replaceSelectedLetters", { board, selectedLetters });
   };
 
   // Listen for events from the server
@@ -25,6 +25,7 @@ const useBoard = () => {
       setTempSelectedLetters([]); // Clear tempSelectedLetters
     };
 
+    const socket = getSocket();
     socket.on("wordAccepted", handleWordAccepted);
     socket.on("newBoard", (newBoard) => {
       dispatch(setBoard(newBoard));

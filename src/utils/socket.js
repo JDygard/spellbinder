@@ -1,5 +1,17 @@
-import { io } from 'socket.io-client';
+import { io } from "socket.io-client";
 
-const socket = io("http://localhost:3001");
+let socket;
 
-export default socket;
+export const initializeSocket = (token) => {
+  console.log(token);
+  socket = io("http://localhost:3001", {
+    query: { token },
+  });
+};
+
+export const getSocket = () => {
+  if (!socket) {
+    throw new Error("Socket not initialized");
+  }
+  return socket;
+};
