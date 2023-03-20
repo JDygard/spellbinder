@@ -23,9 +23,10 @@ const Login = () => {
                 const data = await response.json();
                 const token = data.token;
                 localStorage.setItem('token', token); // Save token to local storage
-                console.log('Logged in successfully:', token);
+                localStorage.setItem('user', JSON.stringify(data.user)); // Save user object to local storage
+                console.log('Logged in successfully:', data.user);
                 // Save the token and redirect the user to the dashboard or character selection screen
-                dispatch(login())
+                dispatch(login());
             } else {
                 console.error('Login failed:', response.statusText);
             }

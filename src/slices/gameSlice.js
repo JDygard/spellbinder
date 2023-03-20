@@ -4,7 +4,9 @@ const initialState = {
   board: [],
   selectedLetters: [],
   submittedWords: [],
-  loggedIn: false, // Add this line
+  loggedIn: false,
+  character: {}, //currently selected character
+  characters: [],
 };
 
 const gameSlice = createSlice({
@@ -29,16 +31,24 @@ const gameSlice = createSlice({
     login: (state) => {
       state.loggedIn = true;
     },
+    setCharacter: (state, action) => {
+      state.character = action.payload;
+    },
+    setCharacters: (state, action) => {
+      state.characters = action.payload;
+    },
   },
 });
 
-export const { 
-  setBoard, 
-  replaceLetters, 
-  setSelectedLetters, 
-  addSubmittedWord, 
-  clearSelectedLetters, 
-  login
+export const {
+  setBoard,
+  replaceLetters,
+  setSelectedLetters,
+  addSubmittedWord,
+  clearSelectedLetters,
+  login,
+  setCharacter,
+  setCharacters,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

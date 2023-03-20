@@ -1,39 +1,18 @@
-// App.js
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import GameBoard from './GameBoard';
-import SubmittedWordsList from './SubmittedWordsList';
-import PlayerStats from './PlayerStats';
-import '../styles/App.css';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import Dashboard from './Dashboard';
 import Login from './Login';
-import { login } from '../slices/gameSlice';
-import { initializeSocket } from '../utils/socket'; // Add this import
+import '../styles/App.css';
 
 function App() {
-  const loggedIn = useSelector((state) => state.game.loggedIn);
-  const dispatch = useDispatch();
-
-  const handleLogin = () => {
-    dispatch(login());
-  };
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      initializeSocket(token);
-    }
-  }, [loggedIn]);
+  const loggedIn = useSelector((state) => state.auth.loggedIn);
 
   return (
     <div className="App">
-      {!loggedIn ? (
-        <Login onLogin={handleLogin} />
+      {loggedIn ? (
+        <Dashboard />
       ) : (
-        <>
-          <PlayerStats />
-          <GameBoard />
-          <SubmittedWordsList />
-        </>
+        <Login />
       )}
     </div>
   );
@@ -42,57 +21,42 @@ function App() {
 export default App;
 
 
-
 /*
-    Design data structures and state management:
-        Create data structures for representing the player's character, including stats, health, class, talent trees, inventory, and equipment.
-        Determine how to manage the state of these data structures, using React's built-in state management or a third-party library such as Redux.
+character: {
+  id: characterId,
+  name: 'character name',
+  level: 1,
+  experience: 0,
+  class: 'warrior',
+  talentPoints: 0,
+  talents: {
+    class: {
+    },
+    generic: {
+    },
+  },
+  inventory: [
+  { weapon: itemId },
+  { armor: itemId },
+  { trinket: itemId },
+  { helmet: itemId },
+  { inventory: [itemId, itemId, itemId, itemId, itemId, itemId, itemId, itemId, itemId, itemId]}
+  ]
+}
 
-    Implement user interface components:
-        Build UI components for displaying and interacting with the RPG elements, such as character stats, health, class selection, talent trees, inventory, and equipment slots.
-        Implement interactivity for the UI components, allowing the user to select a class, allocate talent points, equip items, and more.
+item: {
+  id: itemId,
+  name: 'item name',
+  type: 'weapon',
+  stats: {
+    strength: 1,
+    agility: 1,
+    intellect: 1,
+  },
+  keywords: ['keyword1', 'keyword2'],
+  combos: [{}];
+}
 
-    Create game logic and mechanics:
-        Implement the logic for the RPG mechanics, such as calculating stat bonuses from talents and equipment, applying health changes, and resolving class-specific actions.
-        Add the necessary code for handling status effects, including their visual representation, duration, and effect on the game board tiles.
-
-    Backend functionality phase 1:
-        Set up socket.io for real-time communication between the client and server.
-        Implement server-side code for simulating fights against other players and handling game logic that should be server-side.
-
-    Backend functionality phase 2:
-        Implement PvE encounters with challenging enemies, incorporating status effects and rewards.
-        Refactor the game code, moving game-sensitive logic from the frontend to the backend, such as generating game board letters, calculating word value, and validating submitted words.
-        Integrate MongoDB for storing player data, including character stats, inventory, equipment, and progress.
-
-    Backend functionality phase 3:
-        Implement player vs. player combat, including matchmaking, handling combat logic, and reporting results.
-
-    Reach goals:
-        Design and implement a combo system that provides abilities based on word length and specific conditions.
-
-
-We will be building, in this order:
-1. The foundation for RPG elements like:
- - Statistics: Strength, dexterity, intelligence
- - Health: Depleted when the player is hit by the enemy
- - Classes: Three classes: Warrior, rogue, sorcerer
- - Talent trees: Three for each class
- - Inventory: Keeping equipment
- - Equipment: Slots for weapon, armor, helmet, accessory
-2. Backend functionality phase 1:
- - Setting up socket.io
- - Simulating fights against another player using backend code.
-3. Status effects. Status effects will be applied by the opposing player and affect the function of the tiles that the player uses, changing their color and effect. The effect has a duration (usually 1 to 3) that goes down as the player submits words.
- - Poison: Using the tile in a word depletes the player's healthy
- - Stun: Renders a tile unusable
- - Break: Renders a tile's value to zero
-4: Backend functionality phase 2:
- - A system of PvE encounters designed to challenge the player and lead to rewards in equipment, using status effects to increase the challenge.
- - Move game-sensitive code from the frontend to the backend, like generating game board letters, calculating word value, double-checking that submitted words are valid given the game board letters, and player inventory/stats/equipment.
- - Implement mongoDB for storage.
-5: Backend functionality phase 3:
- - Implement player vs. player combat.
-6: Reach goals:
- - Combo system: Implement abilities that are activated based on word length. i.e. a dagger might have a "backstab" ability that is submitting three three letter words in a short timeframe, or a mace might have "Smite" which is two five letter words.
- */
+  "keywords" is a list of words that share a theme with the item name. For example, a sword might have the keywords "sword", "blade", "weapon", "metal", "sharp", etc. The keywords, when used in the word game, gain more powerful effects
+  "combos" will remain a placeholder empty object for now. It will be used to store the word length combinations possible.
+*/
