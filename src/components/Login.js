@@ -21,8 +21,10 @@ const Login = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                const token = data.token;
+                const token = data.accessToken;
+                const refreshToken = data.refreshToken;
                 localStorage.setItem('token', token); // Save token to local storage
+                localStorage.setItem('refreshToken', refreshToken); // Save refresh token to local storage
                 localStorage.setItem('user', JSON.stringify(data.user)); // Save user object to local storage
                 console.log('Logged in successfully:', data.user);
                 // Save the token and redirect the user to the dashboard or character selection screen

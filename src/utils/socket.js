@@ -8,7 +8,6 @@ export const initSocket = (token) => {
     socket = io('ws://localhost:3001', {
       query: { token },
     });
-    console.log(socket)
   }
 };
 

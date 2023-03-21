@@ -9,24 +9,24 @@ import Inventory from './Inventory';
 import TalentTrees from './TalentTrees';
 
 const Dashboard = () => {
-    const [activeComponent, setActiveComponent] = useState('pve');
+    const [activeComponent, setActiveComponent] = useState('');
     const loggedIn = useSelector(state => state.auth.loggedIn);
     const dispatch = useDispatch();
-  
+
     useSocket((data) => {
-      // Handle socket data
+        // Handle socket data
     });
-  
+
     useEffect(() => {
-      if (loggedIn) {
-        const token = localStorage.getItem('token');
-        if (token) {
-          dispatch(setInitialState({
-            loggedIn: true,
-            token: token
-          }));
+        if (loggedIn) {
+            const token = localStorage.getItem('token');
+            if (token) {
+                dispatch(setInitialState({
+                    loggedIn: true,
+                    token: token
+                }));
+            }
         }
-      }
     }, [loggedIn, dispatch]);
 
     useEffect(() => {
@@ -52,7 +52,10 @@ const Dashboard = () => {
     return (
         <div className="dashboard">
             <div className="dashboard-menu">
-                <button onClick={() => setActiveComponent('pve')}>PVE</button>
+                <button onClick={() => {
+                    setActiveComponent('pve');
+                    getSocket().emit('requestPVEData');
+                }}>PVE</button>
                 <button onClick={() => setActiveComponent('pvp')}>PVP</button>
                 <button onClick={() => setActiveComponent('inventory')}>Inventory</button>
                 <button onClick={() => setActiveComponent('talents')}>Talent Trees</button>
