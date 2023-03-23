@@ -5,6 +5,7 @@ const initialState = {
   selectedLetters: [],
   submittedWords: [],
   loggedIn: false,
+  playerData: {},
   character: {}, //currently selected character
   characters: [],
 };
@@ -37,6 +38,9 @@ const gameSlice = createSlice({
     setCharacters: (state, action) => {
       state.characters = action.payload;
     },
+    setPlayerData: (state, action) => {
+      state.playerData = action.payload;
+    },
   },
 });
 
@@ -49,6 +53,7 @@ export const {
   login,
   setCharacter,
   setCharacters,
+  setPlayerData,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

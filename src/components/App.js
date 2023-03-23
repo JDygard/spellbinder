@@ -4,6 +4,7 @@ import { refreshTokens } from '../slices/authSlice';
 import Dashboard from './Dashboard';
 import Login from './Login';
 import '../styles/App.css';
+import { SocketProvider } from '../utils/SocketContext';
 
 function App() {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ function App() {
         "Authorization": `Bearer ${localStorage.getItem('token')}`,
       },
     });
-  
+
     if (response.status === 401) {
       const refreshToken = localStorage.getItem('refreshToken');
       if (refreshToken) {
@@ -30,7 +31,7 @@ function App() {
           },
           body: JSON.stringify({ refreshToken }), // Make sure you send the refresh token as a JSON object
         });
-  
+
         if (response.status === 200) {
           const data = await response.json(); // Parse the JSON response
           const token = data.accessToken;
@@ -57,13 +58,15 @@ function App() {
   }
 
   return (
-    <div className="App">
-      {loggedIn ? (
-        <Dashboard />
-      ) : (
-        <Login />
-      )}
-    </div>
+    <SocketProvider>
+      <div className="App">
+        {loggedIn ? (
+          <Dashboard />
+        ) : (
+          <Login />
+        )}
+      </div>
+    </SocketProvider>
   );
 }
 

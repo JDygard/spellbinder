@@ -3,38 +3,23 @@ import "../styles/GameBoard.css";
 import useBoard from "../hooks/useBoard";
 import useSelectedLetters from "../hooks/useSelectedLetters";
 import { letterRarity } from "./letterRarity";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  setBoard,
-  setSelectedLetters,
-  addSubmittedWord,
-  clearSelectedLetters,
-} from "../slices/gameSlice";
-import { getSocket } from "../utils/socket";
+import { useSocket } from "../utils/SocketContext";
 
 const GameBoard = () => {
   const [inputValue, setInputValue] = useState("");
   const [wordIsValid, setWordIsValid] = useState(true);
   const { selectedLetters, handleInputChange } = useSelectedLetters();
-  const {
-    board,
-    generateBoard,
-    replaceSelectedLetters,
-    setTempSelectedLetters,
-  } = useBoard();
-  const dispatch = useDispatch();
+  const { board, generateBoard, setTempSelectedLetters } = useBoard();
+  const socket = useSocket();
 
   const submitWord = () => {
     if (!wordIsValid) return;
-  
+
     if (inputValue === "") return;
-  
+
     console.log("Submitting word:", inputValue);
-    getSocket().emit("submitWord", inputValue);
-    // Save the selected letters in tempSelectedLetters
     setTempSelectedLetters(selectedLetters);
-    // Clear the selected letters and input value
-    dispatch(clearSelectedLetters());
+    socket.emit("submitWord", inputValue);
     setInputValue("");
   };
 
@@ -47,20 +32,22 @@ const GameBoard = () => {
 
   useEffect(() => {
     generateBoard();
-  }, []);
+  }, [generateBoard]);
 
   return (
     <div className="game-board">
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="row">
-          {row.map((letter, colIndex) => (
+          {row.map(({ letter, key, effect }, colIndex) => (
             <div
               key={`${rowIndex}-${colIndex}`}
               className={`letter ${
-                selectedLetters.some((pos) => pos.row === rowIndex && pos.col === colIndex)
+                selectedLetters.some(
+                  (pos) => pos.row === rowIndex && pos.col === colIndex
+                )
                   ? "selected"
                   : ""
-              }`}
+              } ${effect}`}
             >
               {letter}
               <span className={`rarity-dot ${letterRarity(letter).color}`} />

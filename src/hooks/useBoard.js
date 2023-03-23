@@ -1,45 +1,49 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setBoard, replaceLetters, addSubmittedWord } from "../slices/gameSlice";
-import { getSocket } from "../utils/socket";
+import { useSocket } from "../utils/SocketContext";
 
 const useBoard = () => {
   const dispatch = useDispatch();
   const board = useSelector((state) => state.game.board);
   const [tempSelectedLetters, setTempSelectedLetters] = useState([]);
 
-  const generateBoard = () => {
-    let size = 4;
-    getSocket().emit("generateBoard", size);
-  };
+  const socket = useSocket();
 
-  const replaceSelectedLetters = (selectedLetters) => {
-    getSocket().emit("replaceSelectedLetters", { board, selectedLetters });
-  };
+  const generateBoard = useCallback(() => {
+    let size = 4;
+    socket.emit("generateBoard", size);
+  },[socket]);
+
+  const replaceSelectedLetters = useCallback((selectedLetters) => {
+    socket.emit("replaceSelectedLetters", { selectedLetters });
+  }, [socket]);
 
   // Listen for events from the server
   useEffect(() => {
-    const handleWordAccepted = (acceptedWord) => {
-      dispatch(addSubmittedWord(acceptedWord));
-      replaceSelectedLetters(tempSelectedLetters);
-      setTempSelectedLetters([]); // Clear tempSelectedLetters
-    };
+    if (socket) {
+      socket.on("newBoard", (newBoard) => {
+        dispatch(setBoard(newBoard));
+      });
 
-    const socket = getSocket();
-    socket.on("wordAccepted", handleWordAccepted);
-    socket.on("newBoard", (newBoard) => {
-      dispatch(setBoard(newBoard));
-    });
-    socket.on("updatedBoard", (updatedBoard) => {
-      dispatch(replaceLetters(updatedBoard));
-    });
+      socket.on("updatedBoard", (updatedBoard) => {
+        console.log("updatedBoard", updatedBoard)
+        dispatch(replaceLetters(updatedBoard));
+      });
 
-    return () => {
-      socket.off("newBoard");
-      socket.off("updatedBoard");
-      socket.off("wordAccepted", handleWordAccepted);
-    };
-  }, [dispatch, tempSelectedLetters, replaceSelectedLetters]);
+      socket.on("wordAccepted", (word) => {
+        dispatch(addSubmittedWord(word));
+        replaceSelectedLetters(tempSelectedLetters);
+        setTempSelectedLetters([]);
+      });
+
+      return () => {
+        socket.off("newBoard");
+        socket.off("updatedBoard");
+        socket.off("wordAccepted");
+      };
+    }
+  }, [dispatch, tempSelectedLetters, replaceSelectedLetters, socket]);
 
   return { board, generateBoard, replaceSelectedLetters, setTempSelectedLetters };
 };

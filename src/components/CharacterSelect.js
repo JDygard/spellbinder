@@ -1,46 +1,40 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { setCharacter, setCharacters } from '../slices/gameSlice';
-import { getSocket } from '../utils/socket';
+import '../styles/CharacterSelect.css';
 
 const CharacterSelect = () => {
-    const dispatch = useDispatch();
-    const characters = useSelector((state) => state.game.characters);
-    const character = useSelector((state) => state.game.character);
+  const characters = useSelector((state) => state.game.characters);
+  const dispatch = useDispatch();
 
-    const handleCharacterSelect = (character) => {
-        dispatch(setCharacter(character));
-    };
+  const handleSelectCharacter = (character) => {
+    dispatch(setCharacter(character));
+  };
 
-    const characterMap = characters.map((character) => {
-        // Make a card with a button for each character
-        return (
-            <div onClick={handleCharacterSelect(character)} className="character-card">
-                <h3>{character.name}</h3>
-                <p>Level: {character.level}</p>
-                <p>class: {character.class}</p>
-            </div>
-        );
-    });
+  const handleCreateCharacter = () => {
+    // Implement character creation logic here
+    console.log('Create a new character');
+  };
 
-    useEffect(() => {
-        // use the current user id to fetch the character list from the server
-        // use socket.io to listen for character updates
-        getSocket().emit('getCharacters', 'userId');
-        getSocket().on('characters', (characters) => {
-            // Update the character list in the store
-            dispatch(setCharacters(characters));
-        });
-    }, []);
-
-    return (
-        <div className="character-select">
-            {/* Add your character selection logic and UI here */}
-            <button onClick={() => handleCharacterSelect('character1')}>Character 1</button>
-            <button onClick={() => handleCharacterSelect('character2')}>Character 2</button>
-            {/* Add more characters as needed */}
-        </div>
-    );
+  return (
+    <div>
+      <h2>Select a character:</h2>
+      <div className="character-list">
+        {characters.map((character) => (
+          <button
+            key={character.id}
+            className="character-button"
+            onClick={() => handleSelectCharacter(character)}
+          >
+            {character.name}
+          </button>
+        ))}
+      </div>
+      <button className="create-character-button" onClick={handleCreateCharacter}>
+        Create New Character
+      </button>
+    </div>
+  );
 };
 
 export default CharacterSelect;

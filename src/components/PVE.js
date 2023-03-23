@@ -1,13 +1,11 @@
-import React from 'react';
-import { getSocket, useSocket } from '../utils/socket';
+import React, { useEffect } from 'react';
+import { getSocket, useSocket } from '../hooks/useSocketActions';
 import GameBoard from './GameBoard';
 
 const PVE = () => {
   const handlePVEData = (data) => {
     console.log("PVE data:", data);
   };
-
-  useSocket(handlePVEData)
 
   return (
     <GameBoard />
