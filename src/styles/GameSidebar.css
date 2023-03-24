@@ -1,0 +1,26 @@
+.game-sidebar {
+
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-left: 1px solid #dee2e6;
+    overflow-y: auto;
+}
+
+.game-sidebar h3 {
+    margin-top: 0;
+}
+
+.game-sidebar h4 {
+    margin-bottom: 0.5rem;
+}
+
+.game-sidebar ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.game-container {
+    display: flex;
+    align-items: flex-start;
+}

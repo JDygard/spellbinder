@@ -1,29 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useSocket } from "../utils/SocketContext";
 import GameBoard from './GameBoard';
+import GameSidebar from './GameSidebar';
 
 const PVE = () => {
   const [challengeList, setChallengeList] = useState([]);
   const [showGameBoard, setShowGameBoard] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentMonster, setCurrentMonster] = useState(null);
   const socket = useSocket();
-  
+
   useEffect(() => {
     socket.on('challengeList', (data) => {
-      console.log(data)
       setChallengeList(data);
       setIsLoading(false);
+    });
+
+    socket.on('startChallenge', (monster) => {
+      setCurrentMonster(monster);
+      setIsLoading(false)
+      setShowGameBoard(true);
     });
 
     socket.emit('requestChallengeList');
 
     return () => {
       socket.off('challengeList');
+      socket.off('startChallenge');
     };
   }, [socket]);
 
-  const handleChallengeClick = () => {
-    setShowGameBoard(true);
+  const handleChallengeClick = (event) => {
+    setIsLoading(true);
+    socket.emit("challengeSelected", event.target.id);
   };
 
   if (isLoading) {
@@ -33,11 +42,14 @@ const PVE = () => {
   return (
     <>
       {showGameBoard ? (
-        <GameBoard />
+        <div className="game-container">
+          <GameSidebar />
+          <GameBoard />
+        </div>
       ) : (
         <div>
           {challengeList.map((challenge) => (
-            <button key={challenge.id} onClick={handleChallengeClick}>
+            <button key={challenge.id} id={challenge.id} onClick={handleChallengeClick}>
               {challenge.name}
             </button>
           ))}
