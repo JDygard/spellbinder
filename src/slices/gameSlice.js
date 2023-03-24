@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   board: [],
   selectedLetters: [],
-  submittedWords: [],
   loggedIn: false,
   playerData: {},
   character: {}, //currently selected character
@@ -22,9 +21,7 @@ const gameSlice = createSlice({
     },
     setSelectedLetters: (state, action) => {
       state.selectedLetters = action.payload;
-    },
-    addSubmittedWord: (state, action) => {
-      state.submittedWords.push(action.payload);
+      console.log('selectedLetters', state.selectedLetters)
     },
     clearSelectedLetters: (state) => {
       state.selectedLetters = [];
@@ -48,7 +45,6 @@ export const {
   setBoard,
   replaceLetters,
   setSelectedLetters,
-  addSubmittedWord,
   clearSelectedLetters,
   login,
   setCharacter,

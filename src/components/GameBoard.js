@@ -11,7 +11,7 @@ const GameBoard = () => {
   const { selectedLetters, handleInputChange } = useSelectedLetters();
   const { board, generateBoard, setTempSelectedLetters } = useBoard();
   const socket = useSocket();
-  console.log(selectedLetters)
+  
   const submitWord = () => {
     if (!wordIsValid) return;
 

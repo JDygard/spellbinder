@@ -9,7 +9,6 @@ const GameSidebar = () => {
         if (socket) {
             socket.on('gameStateUpdate', (gameState) => {
                 setGameState(gameState);
-                console.log(gameState.gameLog);
             });
 
             return () => {
@@ -37,9 +36,9 @@ const GameSidebar = () => {
             <h4>Game Log</h4>
             <ul>
                 {gameState.gameLog && gameState.gameLog.map((entry, index) => (
-                    <li key={index}>
+                    <li key={index} className={entry.color}>
                         {entry.type === 'monsterAttack' ? (
-                            `${entry.abilityName} dealt ${entry.damage} damage`
+                            `${entry.abilityName} dealt ${entry.damage} damage` 
                         ) : (
                             `${entry.word} (${entry.value})`
                         )}
