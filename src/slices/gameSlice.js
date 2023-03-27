@@ -21,7 +21,6 @@ const gameSlice = createSlice({
     },
     setSelectedLetters: (state, action) => {
       state.selectedLetters = action.payload;
-      console.log('selectedLetters', state.selectedLetters)
     },
     clearSelectedLetters: (state) => {
       state.selectedLetters = [];

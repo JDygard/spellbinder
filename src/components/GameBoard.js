@@ -4,6 +4,7 @@ import useBoard from "../hooks/useBoard";
 import useSelectedLetters from "../hooks/useSelectedLetters";
 import { letterRarity } from "./letterRarity";
 import { useSocket } from "../utils/SocketContext";
+import LetterTile from "./LetterTile";
 
 const GameBoard = () => {
   const [inputValue, setInputValue] = useState("");
@@ -11,14 +12,19 @@ const GameBoard = () => {
   const { selectedLetters, handleInputChange } = useSelectedLetters();
   const { board, generateBoard, setTempSelectedLetters } = useBoard();
   const socket = useSocket();
-  
+
   const submitWord = () => {
     if (!wordIsValid) return;
 
     if (inputValue === "") return;
 
+    const submittedLetters = selectedLetters.map(
+      (pos) => board[pos.row][pos.col]
+    );
+    console.log(submittedLetters)
+
     setTempSelectedLetters(selectedLetters);
-    socket.emit("submitWord", inputValue);
+    socket.emit("submitWord", { word: inputValue, letters: submittedLetters });
     setInputValue("");
   };
 
@@ -38,18 +44,14 @@ const GameBoard = () => {
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="row">
           {row.map(({ letter, key, effect }, colIndex) => (
-            <div
+            <LetterTile
+              letter={letter}
               key={`${rowIndex}-${colIndex}`}
-              className={`letter ${selectedLetters.some(
-                (pos) => pos.row === rowIndex && pos.col === colIndex
-              )
-                ? "selected"
-                : ""
-                } ${effect}`}
-            >
-              {letter}
-              <span className={`rarity-dot ${letterRarity(letter).color}`} />
-            </div>
+              effect={effect}
+              rowIndex={rowIndex}
+              colIndex={colIndex}
+              selectedLetters={selectedLetters}
+            />
           ))}
         </div>
       ))}
