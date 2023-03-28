@@ -1,7 +1,7 @@
 import React from 'react';
 import { letterRarity } from './letterRarity';
 
-const LetterTile = ({ letter, key, effect, rowIndex, colIndex, selectedLetters }) => (
+const LetterTile = ({ letter, effect, rowIndex, colIndex, selectedLetters }) => (
   <div
     key={`${rowIndex}-${colIndex}`}
     className={`letter ${selectedLetters.some(
@@ -12,6 +12,9 @@ const LetterTile = ({ letter, key, effect, rowIndex, colIndex, selectedLetters }
       } ${effect.type}`}
   >
     {letter}
+    {effect.duration > 0 && (
+      <span className="effect-duration">{effect.duration}</span>
+    )}
     <span className={`rarity-dot ${letterRarity(letter).color}`} />
   </div>
 );

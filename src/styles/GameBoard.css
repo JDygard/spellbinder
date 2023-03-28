@@ -57,4 +57,24 @@
   .poison {
     background-color: #00ff00;
   }
+
+  .burn {
+    background-color: #ff0000;
+  }
+
+  .fire {
+    background-color: #ff0000;
+  }
+
+  .blind {
+    background-color: #000000;
+  }
+
+  .effect-duration {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 12px; 
+    padding: 2px; 
+  }
   
