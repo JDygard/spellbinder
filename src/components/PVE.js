@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSocket } from "../utils/SocketContext";
 import GameBoard from './GameBoard';
 import GameSidebar from './GameSidebar';
+import ComboSidebar from './ComboSidebar';
 
 const PVE = () => {
   const [challengeList, setChallengeList] = useState([]);
@@ -45,6 +46,7 @@ const PVE = () => {
         <div className="game-container">
           <GameSidebar />
           <GameBoard />
+          <ComboSidebar />
         </div>
       ) : (
         <div>
