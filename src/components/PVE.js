@@ -37,7 +37,7 @@ const PVE = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Loading in PVE</div>;
   }
 
   return (

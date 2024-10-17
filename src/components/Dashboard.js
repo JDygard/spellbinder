@@ -17,8 +17,9 @@ const Dashboard = () => {
   const characters = useSelector((state) => state.game.characters);
   const character = useSelector((state) => state.game.character);
   const dispatch = useDispatch();
-
+ 
   const handlePlayerData = (data) => {
+    console.log(data)
     switch (data.event) {
       case "playerData":
         dispatch(setCharacters(data.playerData));
@@ -59,10 +60,10 @@ const Dashboard = () => {
   }, [socket]);
 
   const renderActiveComponent = () => {
-    if (activeComponent === "characterSelect" && characters.length === 0) {
-      return <div>Loading...</div>;
-    }
-
+    // if (activeComponent === "characterSelect" && characters.length === 0) {
+    //   return <div>Loading...</div>;
+    // }
+    console.log("not loading?", activeComponent)
     switch (activeComponent) {
       case "characterSelect":
         return <CharacterSelect characters={characters} />;

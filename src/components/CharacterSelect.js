@@ -1,14 +1,21 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCharacter, setCharacters } from '../slices/gameSlice';
+import { setCharacter } from '../slices/gameSlice';
+import { useSocket } from '../utils/SocketContext';
 import '../styles/CharacterSelect.css';
 
 const CharacterSelect = () => {
   const characters = useSelector((state) => state.game.characters);
   const dispatch = useDispatch();
+  const socket = useSocket();  // Access the socket
 
   const handleSelectCharacter = (character) => {
-    dispatch(setCharacter(character));
+    dispatch(setCharacter(character));  // Set the selected character in Redux
+
+    // Emit the 'selectCharacter' event to the server
+    if (socket) {
+      socket.emit('selectCharacter', character.id);  // Send the selected character's ID to the server
+    }
   };
 
   const handleCreateCharacter = () => {
