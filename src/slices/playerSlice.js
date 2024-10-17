@@ -11,12 +11,12 @@ const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
-    // Define actions and reducers for updating player health, points, and other stats
+    
   },
 });
 
 // Export actions
-export const { /* action1, action2, ... */ } = playerSlice.actions;
+export const {  } = playerSlice.actions;
 
 // Export reducer
 export default playerSlice.reducer;
