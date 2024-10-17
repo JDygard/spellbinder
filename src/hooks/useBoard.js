@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setBoard, replaceLetters, clearSelectedLetters } from "../slices/gameSlice";
+import { setBoard, replaceLetters, clearSelectedLetters } from "../store/slices/gameSlice";
 import { useSocket } from "../utils/SocketContext";
 
 

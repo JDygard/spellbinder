@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Routes, Route } from "react-router-dom";
 import "../styles/Dashboard.css";
-import PVE from "./PVE";
+import PVE from "./game/PVE";
 import PVP from "./PVP";
 import Inventory from "./Inventory";
 import TalentTrees from "./TalentTrees";

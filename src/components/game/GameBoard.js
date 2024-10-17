@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../styles/GameBoard.css";
-import useBoard from "../hooks/useBoard";
-import useSelectedLetters from "../hooks/useSelectedLetters";
-import { useSocket } from "../utils/SocketContext";
+import useBoard from "../../hooks/useBoard";
+import useSelectedLetters from "../../hooks/useSelectedLetters";
+import { useSocket } from "../../utils/SocketContext";
 import LetterTile from "./LetterTile";
 
 const GameBoard = () => {

@@ -1,6 +1,6 @@
 // ComboSidebar.js
 import React, { useContext, useState, useEffect } from 'react';
-import { useSocket } from '../utils/SocketContext';
+import { useSocket } from '../../utils/SocketContext';
 import ComboItem from './ComboItem';
 
 const ComboSidebar = () => {

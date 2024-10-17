@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { verifyToken } from "../slices/authSlice";
-import Dashboard from "./Dashboard";
-import Login from "./Login";
+import { verifyToken } from "./store/slices/authSlice";
+import Dashboard from "./components/Dashboard";
+import Login from "./components/Login";
 import "../styles/App.css";
-import { SocketProvider } from "../utils/SocketContext";
+import { SocketProvider } from "./utils/SocketContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {

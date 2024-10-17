@@ -1,5 +1,5 @@
 import React from 'react';
-import { letterRarity } from './letterRarity';
+import { letterRarity } from '../helpers/letterRarity';
 
 const LetterTile = ({ letter, effect, rowIndex, colIndex, selectedLetters }) => (
   <div

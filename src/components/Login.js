@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/Login.css';
 import { useDispatch } from "react-redux";
-import { login } from "../slices/gameSlice";
+import { login } from "../store/slices/gameSlice";
 
 const Login = () => {
     const [username, setUsername] = useState('');

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { letterRarity } from "./letterRarity";
+import { letterRarity } from "../helpers/letterRarity";
 
 const SubmittedWordsList = () => {
   const submittedWords = useSelector((state) => state.game.submittedWords);

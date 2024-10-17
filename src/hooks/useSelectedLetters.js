@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { setSelectedLetters as setReduxSelectedLetters } from "../slices/gameSlice";
+import { setSelectedLetters as setReduxSelectedLetters } from "../store/slices/gameSlice";
 
 const useSelectedLetters = () => {
   const dispatch = useDispatch();

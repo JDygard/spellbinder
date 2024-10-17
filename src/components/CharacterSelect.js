@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCharacter } from '../slices/gameSlice';
+import { setCharacter } from '../store/slices/gameSlice';
 import { useSocket } from '../utils/SocketContext';
 import '../styles/CharacterSelect.css';
 
