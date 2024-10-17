@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './components/App';
+import App from './App';
 import { Provider } from 'react-redux';
-import { loadInitialState } from './slices/loadInitialState';
-import store from './store';
+import { loadInitialState } from './store/slices/loadInitialState';
+import store from './store/store';
 
 store.dispatch(loadInitialState());
 

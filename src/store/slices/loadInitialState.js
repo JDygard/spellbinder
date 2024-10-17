@@ -1,4 +1,4 @@
-import { setInitialState } from './authSlice';
+import { setInitialState } from './authSlice.js';
 
 export const loadInitialState = () => {
   return async (dispatch) => {

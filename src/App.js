@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { verifyToken } from "./store/slices/authSlice";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
-import "../styles/App.css";
+import "./styles/App.css";
 import { SocketProvider } from "./utils/SocketContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 

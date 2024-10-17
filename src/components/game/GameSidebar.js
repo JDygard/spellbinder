@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSocket } from '../../utils/SocketContext';
-import '../styles/GameSidebar.css';
+import '../../styles/GameSidebar.css';
 
 const GameSidebar = () => {
     const socket = useSocket();

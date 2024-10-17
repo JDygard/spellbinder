@@ -1,7 +1,7 @@
 // ComboItem.js
 import React from 'react';
 import PropTypes from 'prop-types';
-import '../styles/ComboItem.css';
+import '../../styles/ComboItem.css';
 
 const ComboItem = ({ combo, progress, stepStatus }) => {
   return (
