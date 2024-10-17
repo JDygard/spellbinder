@@ -7,6 +7,43 @@ const initialState = {
     refreshToken: null,
 };
 
+export const verifyToken = createAsyncThunk(
+    'auth/verifyToken',
+    async (_, { dispatch }) => {
+      const token = localStorage.getItem("token");
+      const refreshToken = localStorage.getItem("refreshToken");
+  
+      const response = await fetch("http://localhost:3001/verify-token", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (response.status === 401 && refreshToken) {
+        const refreshResponse = await fetch("http://localhost:3001/refresh-token", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ refreshToken }),
+        });
+  
+        if (refreshResponse.status === 200) {
+          const data = await refreshResponse.json();
+          const newToken = data.accessToken;
+          const newRefreshToken = data.refreshToken;
+  
+          localStorage.setItem("token", newToken);
+          localStorage.setItem("refreshToken", newRefreshToken);
+  
+          dispatch(refreshTokens({ token: newToken, refreshToken: newRefreshToken }));
+        }
+      }
+    }
+  );
+
 const authSlice = createSlice({
     name: 'auth',
     initialState,
