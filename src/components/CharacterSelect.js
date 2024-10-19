@@ -9,7 +9,7 @@ const CharacterSelect = () => {
   const characters = useSelector((state) => state.player.characters);
   const dispatch = useDispatch();
   const socket = useSocket();  // Access the socket
-
+  console.log(characters);
   const [newCharacterName, setNewCharacterName] = useState('');
   const [newCharacterClass, setNewCharacterClass] = useState('');
 

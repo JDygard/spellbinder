@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import { useDispatch } from "react-redux";
-import { setInitialPlayerData } from "../store/slices/playerSlice";
+import { setInitialPlayerData, updateCharacters } from "../store/slices/playerSlice";
 
 const SocketContext = createContext();
 
@@ -22,9 +22,13 @@ export const SocketProvider = ({ children }) => {
       });
       
       newSocket.on("playerData", (data) => {
-        console.log("Received player data:", data);
         dispatch(setInitialPlayerData(data));
       })
+
+      newSocket.on("updateCharacters", (data) => {
+        dispatch(updateCharacters(data));
+      })
+        
 
       return () => {
         newSocket.disconnect();

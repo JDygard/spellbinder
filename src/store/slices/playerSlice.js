@@ -16,8 +16,8 @@ const playerSlice = createSlice({
       state.username = action.payload.username;
       state.characters = action.payload.characters;
     },
-    addCharacter: (state, action) => {
-      state.characters.push(action.payload);
+    updateCharacters: (state, action) => {
+      state.characters = action.payload;
     },
     updateCharacter: (state, action) => {
       const { id, data } = action.payload;
@@ -33,7 +33,12 @@ const playerSlice = createSlice({
 });
 
 // Export actions
-export const { setInitialPlayerData, addCharacter, updateCharacter, removeCharacter } = playerSlice.actions;
+export const {
+   setInitialPlayerData,
+   updateCharacters,
+   updateCharacter,
+   removeCharacter
+ } = playerSlice.actions;
 
 // Export reducer
 export default playerSlice.reducer;

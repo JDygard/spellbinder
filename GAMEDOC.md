@@ -1,3 +1,14 @@
+MVP:
+- Player vs Player
+- PvE tutorial/practice
+- Items with keywords/stats
+- Combos
+- Classes
+- Talents
+- Leaderboards
+- Full effects tile loadout as shown below
+
+
 Swap tile board
 Rogue :
 - Blind tile - renders a tile's letter invisible
