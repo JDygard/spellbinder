@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, Routes, Route } from "react-router-dom";
+import { useSocket } from "../utils/SocketContext";
 import "../styles/Dashboard.css";
 import PVE from "./game/PVE";
 import PVP from "./PVP";
@@ -8,9 +9,14 @@ import TalentTrees from "./TalentTrees";
 import CharacterSelect from "./CharacterSelect";
 
 const Dashboard = () => {
+  const socket = useSocket();
+  
   return (
     <div className="dashboard">
       <div className="dashboard-menu">
+        <Link to="/dashboard/characterSelect">
+          <button>Character Select</button>
+        </Link>
         <Link to="/dashboard/pve">
           <button>PVE</button>
         </Link>

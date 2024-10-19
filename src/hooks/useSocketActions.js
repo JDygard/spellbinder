@@ -1,12 +1,15 @@
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import { useSocket } from "../utils/SocketContext";
+import { setUserData } from "../store/slices/authSlice";
+import { setInitialPlayerData } from "../store/slices/playerSlice";
 
 export const useSocketActions = (onPlayerData, ...events) => {
   const socket = useSocket();
 
   useEffect(() => {
     if (socket) {
-      socket.on("playerData", onPlayerData);
+
+      
       socket.on("connect_error", (err) => {
         console.log("Socket connect_error:", err);
       });
@@ -15,10 +18,9 @@ export const useSocketActions = (onPlayerData, ...events) => {
         console.log("Socket error:", err);
       });
 
-      // Add event listeners
       events.forEach((event) => {
         socket.on(event, (data) => {
-          onPlayerData({ event, data });
+          setInitialPlayerData({ event, data });
         });
       });
 

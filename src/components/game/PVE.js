@@ -18,6 +18,7 @@ const PVE = () => {
     });
 
     socket.on('startChallenge', (monster) => {
+      console.log(monster);
       setCurrentMonster(monster);
       setIsLoading(false)
       setShowGameBoard(true);

@@ -1,22 +1,39 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  health: 100,
-  maxHealth: 100,
-  points: 0,
-  // You can add other stats as required
+  id: "",
+  username: "",
+  characters: [],
 };
 
 const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
-    
+    setInitialPlayerData: (state, action) => {
+      console.log("Setting initial player data:", action.payload);
+      state.id = action.payload.id;
+      state.username = action.payload.username;
+      state.characters = action.payload.characters;
+    },
+    addCharacter: (state, action) => {
+      state.characters.push(action.payload);
+    },
+    updateCharacter: (state, action) => {
+      const { id, data } = action.payload;
+      const characterIndex = state.characters.findIndex(char => char.id === id);
+      if (characterIndex !== -1) {
+        state.characters[characterIndex] = { ...state.characters[characterIndex], ...data };
+      }
+    },
+    removeCharacter: (state, action) => {
+      state.characters = state.characters.filter(char => char.id !== action.payload);
+    },
   },
 });
 
 // Export actions
-export const {  } = playerSlice.actions;
+export const { setInitialPlayerData, addCharacter, updateCharacter, removeCharacter } = playerSlice.actions;
 
 // Export reducer
 export default playerSlice.reducer;
