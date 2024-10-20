@@ -2,12 +2,13 @@ MVP:
 - Player vs Player
 - PvE tutorial/practice
 - Items with keywords/stats
-- Combos
 - Classes
+- Combos
 - Talents
-- Leaderboards
 - Full effects tile loadout as shown below
 
+Wishes:
+- Leaderboards
 
 Swap tile board
 Rogue :

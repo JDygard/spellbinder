@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 import '../styles/Login.css';
 import { useDispatch } from "react-redux";
 import { login } from "../store/slices/gameSlice";
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isRegistering, setIsRegistering] = useState(false);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    if (localStorage.getItem('token')) {
+        navigate('/');
+    }
 
     const handleLogin = async () => {
         try {
@@ -29,6 +35,7 @@ const Login = () => {
                 console.log('Logged in successfully:', data.user);
                 // Save the token and redirect the user to the dashboard or character selection screen
                 dispatch(login());
+                navigate('/');
             } else {
                 console.error('Login failed:', response.statusText);
             }
