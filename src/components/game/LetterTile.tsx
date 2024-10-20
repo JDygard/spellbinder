@@ -1,7 +1,10 @@
 import React from 'react';
 import { letterRarity } from '../helpers/letterRarity';
 
-const LetterTile = ({ letter, effect, rowIndex, colIndex, selectedLetters }) => (
+const LetterTile = (
+  { letter, effect, rowIndex, colIndex, selectedLetters }:
+  { letter: string, effect: { type: string, duration: number }, rowIndex: number, colIndex: number, selectedLetters: { row: number, col: number }[] }
+) => (
   <div
     key={`${rowIndex}-${colIndex}`}
     className={`letter ${selectedLetters.some(

@@ -1,12 +1,18 @@
 import { useSelector, useDispatch } from "react-redux";
 import { setSelectedLetters as setReduxSelectedLetters } from "../store/slices/gameSlice";
+import { RootState } from "../store/store";
+
+interface Visited {
+  row: number;
+  col: number;
+}
 
 const useSelectedLetters = () => {
   const dispatch = useDispatch();
-  const board = useSelector((state) => state.game.board);
-  const selectedLetters = useSelector((state) => state.game.selectedLetters);
+  const board = useSelector((state: RootState) => state.game.board);
+  const selectedLetters = useSelector((state: RootState) => state.game.selectedLetters);
 
-  const findValidLetterOnBoard = (letter, visited) => {
+  const findValidLetterOnBoard = (letter: string, visited: Visited[]) => {
     for (let row = 0; row < board.length; row++) {
       for (let col = 0; col < board[row].length; col++) {
         if (
@@ -20,9 +26,9 @@ const useSelectedLetters = () => {
     return null;
   };
 
-  const handleInputChange = (inputValue) => {
+  const handleInputChange = (inputValue: string) => {
     const newSelectedLetters = [];
-    const visited = [];
+    const visited: Visited[] = [];
     let valid = true;
 
     for (const letter of inputValue) {

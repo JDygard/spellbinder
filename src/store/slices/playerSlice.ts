@@ -5,12 +5,18 @@ interface PlayerSlice {
   id: string;
   username: string;
   characters: Character[];
+  health: number;
+  maxHealth: number;
+  points: number;
 }
 
 const initialState: PlayerSlice = {
   id: "",
   username: "",
   characters: [],
+  health: 0,
+  maxHealth: 0,
+  points: 0,
 };
 
 const playerSlice = createSlice({

@@ -1,4 +1,4 @@
-export const letterRarity = (letter) => {
+export const letterRarity = (letter: string) => {
     const commonLetters = 'ETAONRIS';
     const rareLetters = 'JKQXZ';
   
