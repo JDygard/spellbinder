@@ -1,6 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Character } from './gameSlice';
 
-const initialState = {
+interface PlayerSlice {
+  id: string;
+  username: string;
+  characters: Character[];
+}
+
+const initialState: PlayerSlice = {
   id: "",
   username: "",
   characters: [],

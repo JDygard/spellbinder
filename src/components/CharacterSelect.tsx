@@ -4,16 +4,18 @@ import { setCharacter } from '../store/slices/gameSlice';
 import { setInitialPlayerData } from '../store/slices/playerSlice';
 import { useSocket } from '../utils/SocketContext';
 import '../styles/CharacterSelect.css';
+import { RootState } from '../store/store';
+import { Character } from '../store/slices/gameSlice';
+
 
 const CharacterSelect = () => {
-  const characters = useSelector((state) => state.player.characters);
+  const characters = useSelector((state: RootState) => state.player.characters);
   const dispatch = useDispatch();
   const socket = useSocket();  // Access the socket
-  console.log(characters);
   const [newCharacterName, setNewCharacterName] = useState('');
   const [newCharacterClass, setNewCharacterClass] = useState('');
 
-  const handleSelectCharacter = (character) => {
+  const handleSelectCharacter = (character: Character) => {
     dispatch(setCharacter(character));  // Set the selected character in Redux
 
     // Emit the 'selectCharacter' event to the server
@@ -32,7 +34,8 @@ const CharacterSelect = () => {
       // Emit the 'createCharacter' event to the server
       if (socket) {
         socket.emit('createCharacter', characterData);
-        socket.on('playerData', (data) => {
+        socket.on('playerData', (data: any) => {
+          console.log('Received player data:', data);
           dispatch(setInitialPlayerData(data.playerData));  // Update Redux state with new player data
         });
       }

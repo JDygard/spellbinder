@@ -1,6 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const initialState = {
+interface AuthState {
+    loggedIn: boolean;
+    user: any;
+    token: string | null;
+    refreshToken: string | null;
+}
+
+const initialState: AuthState = {
     loggedIn: false,
     user: null,
     token: null,

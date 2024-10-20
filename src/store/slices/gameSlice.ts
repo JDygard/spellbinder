@@ -1,11 +1,65 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
+
+export interface Character {
+  id: string;
+  userId: string;
+  username: string;
+  name: string;
+  level: number;
+  experience: number;
+  class: string;
+  talentPoints: number;
+  talents: {
+    class: Record<string, any>;
+    generic: Record<string, any>;
+  };
+  inventory: {
+    weapon: Record<string, any> | null;
+    armor: Record<string, any> | null;
+    trinket: Record<string, any> | null;
+    helmet: Record<string, any> | null;
+    inventory: (Record<string, any> | null)[];
+  };
+};
+
+interface GameSlice {
+  board: string[];
+  selectedLetters: string[];
+  loggedIn: boolean;
+  playerData: Record<string, any>;
+  character: Character;
+  characters: Character[];
+}
+
+
+
+const initialState: GameSlice = {
   board: [],
   selectedLetters: [],
   loggedIn: false,
   playerData: {},
-  character: {}, //currently selected character
+  character: {
+    id: '',
+    userId: '',
+    username: '',
+    name: '',
+    level: 0,
+    experience: 0,
+    class: '',
+    talentPoints: 0,
+    talents: {
+      class: {},
+      generic: {},
+    },
+    inventory: {
+      weapon: null,
+      armor: null,
+      trinket: null,
+      helmet: null,
+      inventory: [],
+    },
+  }, //currently selected character
   characters: [],
 };
 
