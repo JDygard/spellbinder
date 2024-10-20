@@ -8,10 +8,12 @@ import "./styles/App.css";
 import { SocketProvider } from "./utils/SocketContext";
 import { useSocket } from "./utils/SocketContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useAppDispatch } from "./store/store";
+import { RootState } from "./store/store";
 
 function App() {
-  const dispatch = useDispatch();
-  const loggedIn = useSelector((state) => state.auth.loggedIn);
+  const dispatch = useAppDispatch();
+  const loggedIn = useSelector((state: RootState) => state.auth.loggedIn);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
