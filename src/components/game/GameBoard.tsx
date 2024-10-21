@@ -10,6 +10,7 @@ const GameBoard = () => {
   const [wordIsValid, setWordIsValid] = useState(true);
   const { selectedLetters, handleInputChange } = useSelectedLetters();
   const { board, generateBoard, setTempSelectedLetters } = useBoard();
+
   const socket = useSocket();
 
   const submitWord = () => {
@@ -20,14 +21,13 @@ const GameBoard = () => {
     const submittedLetters = selectedLetters.map(
       (pos) => board[pos.row][pos.col]
     );
-    console.log(submittedLetters)
 
     setTempSelectedLetters(selectedLetters);
     socket.emit("submitWord", { word: inputValue, letters: submittedLetters });
     setInputValue("");
   };
 
-  const handleInputValueChange = (e) => {
+  const handleInputValueChange = (e: any) => {
     const newInputValue = e.target.value.toUpperCase();
     setInputValue(newInputValue);
     const valid = handleInputChange(newInputValue);

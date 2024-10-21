@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useSocket } from '../../utils/SocketContext';
 import '../../styles/GameSidebar.css';
+import { GameState } from '../../store/slices/gameSlice';
 
 const GameSidebar = () => {
     const socket = useSocket();
-    const [gameState, setGameState] = useState(null);
+    const [gameState, setGameState] = useState<GameState>();
     useEffect(() => {
         if (socket) {
-            socket.on('gameStateUpdate', (gameState) => {
-                setGameState(gameState);
+            socket.on('gameStateUpdate', (gameState: GameState) => {
+                setGameState(gameState)
             });
 
             return () => {

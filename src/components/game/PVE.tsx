@@ -4,20 +4,46 @@ import GameBoard from './GameBoard';
 import GameSidebar from './GameSidebar';
 import ComboSidebar from './ComboSidebar';
 
+interface Challenge {
+  id: string;
+  name: string;
+  reward: string;
+}
+
+interface Monster {
+  id: number;
+  type: string;
+  name: string;
+  hp: number;
+  abilities: {
+    name: string;
+    damage: number;
+    effects: Record<string, number>;
+  }[];
+}
+
+const initialMonster: Monster = {
+  id: 0,
+  type: "",
+  name: "",
+  hp: 0,
+  abilities: [],
+};
+
 const PVE = () => {
-  const [challengeList, setChallengeList] = useState([]);
+  const [challengeList, setChallengeList] = useState<Challenge[]>([]);
   const [showGameBoard, setShowGameBoard] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentMonster, setCurrentMonster] = useState(null);
+  const [currentMonster, setCurrentMonster] = useState<Monster>(initialMonster);
   const socket = useSocket();
 
   useEffect(() => {
-    socket.on('challengeList', (data) => {
+    socket.on('challengeList', (data: Challenge[]) => {
       setChallengeList(data);
       setIsLoading(false);
     });
 
-    socket.on('startChallenge', (monster) => {
+    socket.on('startChallenge', (monster: Monster) => {
       console.log(monster);
       setCurrentMonster(monster);
       setIsLoading(false)
@@ -32,9 +58,10 @@ const PVE = () => {
     };
   }, [socket]);
 
-  const handleChallengeClick = (event) => {
+  const handleChallengeClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setIsLoading(true);
-    socket.emit("challengeSelected", event.target.id);
+    const target = event.target as HTMLButtonElement;
+    socket.emit("challengeSelected", target.id);
   };
 
   if (isLoading) {

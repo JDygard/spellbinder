@@ -3,11 +3,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { setBoard, replaceLetters, clearSelectedLetters } from "../store/slices/gameSlice";
 import { useSocket } from "../utils/SocketContext";
 import { RootState } from "../store/store";
+import { SelectedLetter } from "../store/slices/gameSlice";
+
+export interface Effect {
+  type: string;
+  duration: number;
+}
 
 export interface Letter {
   letter: string;
   key: number;
-  effect: {};
+  effect: Effect;
 }
 
 interface Board {
@@ -17,7 +23,7 @@ interface Board {
 const useBoard = () => {
   const dispatch = useDispatch();
   const board = useSelector((state: RootState) => state.game.board);
-  const [tempSelectedLetters, setTempSelectedLetters] = useState([]);
+  const [tempSelectedLetters, setTempSelectedLetters] = useState<SelectedLetter[]>([]);
 
   const socket = useSocket();
 
@@ -26,7 +32,7 @@ const useBoard = () => {
     socket.emit("generateBoard", size);
   },[socket]);
 
-  const replaceSelectedLetters = useCallback((selectedLetters: string[]) => {
+  const replaceSelectedLetters = useCallback((selectedLetters: SelectedLetter[]) => {
     socket.emit("replaceSelectedLetters", { selectedLetters });
   }, [socket]);
 

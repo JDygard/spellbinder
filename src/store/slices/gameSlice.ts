@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Letter } from '../../hooks/useBoard';
 
 
 export interface Character {
@@ -23,15 +24,92 @@ export interface Character {
   };
 };
 
+export interface SelectedLetter {
+  row: number;
+  col: number;
+}
+
 interface GameSlice {
-  board: string[];
-  selectedLetters: string[];
+  board: Letter[][];
+  selectedLetters: SelectedLetter[];
   loggedIn: boolean;
   playerData: Record<string, any>;
   character: Character;
   characters: Character[];
+  submittedWords: string[];
 }
 
+export interface GameState {
+  monster: Monster;
+  playerHp: number;
+  monsterHp: number;
+  combos: Combo[];
+  score: number;
+  gameLog: GameLogEntry[];
+  comboGameLog: ComboGameLogEntry[];
+  tileEffects: TileEffect[];
+  damageMultiplier?: number;
+}
+
+interface Monster {
+  name: string;
+  hp: number;
+  maxHp: number;
+  attack: number;
+  defense: number;
+  abilities: Ability[];
+}
+
+interface Ability {
+  name: string;
+  description: string;
+  cooldown: number;
+}
+
+export interface Combo {
+  id?: string;
+  name: string;
+  sequence: number[]; // Sequence of word lengths
+  timeLimit: number;  // Time limit in seconds
+  effect: ComboEffect;
+}
+
+interface ComboEffect {
+  type: string;       // 'damageMultiplier', 'heal', 'applyStatusEffect', etc.
+  value: number;
+  duration: number;   // Duration in rounds
+  statusEffect?: string;
+}
+
+export interface GameLogEntry {
+  submittedAt: number;
+  abilityName?: string;
+  word?: string;
+  value?: number;
+  color?: 'success' | 'fail' | 'danger';
+  length?: number;
+  effects?: Effect[];
+  type?: string;      // Event type like 'bombExplosion', 'lightningDamage'
+  damage?: number;
+}
+
+interface ComboGameLogEntry {
+  word: string;
+  length: number;
+  submittedAt: number;
+}
+
+interface TileEffect {
+  type: string;       // 'lightning', 'poison', 'bomb', etc.
+  damage?: number;
+  duration?: number;
+}
+
+interface Effect {
+  type: string;
+  damage?: number;
+  duration?: number;
+}
 
 
 const initialState: GameSlice = {
@@ -59,8 +137,9 @@ const initialState: GameSlice = {
       helmet: null,
       inventory: [],
     },
-  }, //currently selected character
+  },
   characters: [],
+  submittedWords: [],
 };
 
 const gameSlice = createSlice({

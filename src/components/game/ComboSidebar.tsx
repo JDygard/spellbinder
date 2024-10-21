@@ -2,15 +2,21 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useSocket } from '../../utils/SocketContext';
 import ComboItem from './ComboItem';
+import { GameState, Combo, GameLogEntry } from '../../store/slices/gameSlice';
+
+interface Progress {
+  progress: number;
+  stepStatus: string[];
+};
 
 const ComboSidebar = () => {
   const socket = useSocket();
-  const [combos, setCombos] = useState([]);
-  const [comboProgress, setComboProgress] = useState([]);
+  const [combos, setCombos] = useState<Combo[]>([]);
+  const [comboProgress, setComboProgress] = useState<Progress[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    socket.on('gameStateUpdate', (gameState) => {
+    socket.on('gameStateUpdate', (gameState: GameState) => {
       // Extract combos and gamelog from gameState
       console.log(gameState)
       const { combos, gameLog } = gameState;
@@ -31,7 +37,7 @@ const ComboSidebar = () => {
     };
   }, [socket]);
 
-  const processGamelogForComboProgress = (gamelog, combos) => {
+  const processGamelogForComboProgress = (gamelog: GameLogEntry[], combos: Combo[]) => {
     const validWordEntries = gamelog.filter((entry) => entry.color === 'success');
 
     // Initialize an array to store the progress of each combo
@@ -58,6 +64,10 @@ const ComboSidebar = () => {
           // If this is the first step in the combo, set the combo start time
           if (sequenceIndex === 0) {
             comboStartTime = entry.submittedAt;
+          }
+
+          if (comboStartTime === null) {
+            break;
           }
 
           // If the time difference is within the combo time limit, increment the sequence index
