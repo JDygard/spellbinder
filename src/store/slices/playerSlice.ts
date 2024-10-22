@@ -24,7 +24,7 @@ const playerSlice = createSlice({
   initialState,
   reducers: {
     setInitialPlayerData: (state, action) => {
-      console.log("Setting initial player data:", action.payload);
+      if (!action.payload) return;
       state.id = action.payload.id;
       state.username = action.payload.username;
       state.characters = action.payload.characters;

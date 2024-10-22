@@ -39,6 +39,7 @@ const PVE = () => {
 
   useEffect(() => {
     socket.on('challengeList', (data: Challenge[]) => {
+      // console.log(data) we are in the middle of testing the challenges to see if they are being received
       setChallengeList(data);
       setIsLoading(false);
     });
