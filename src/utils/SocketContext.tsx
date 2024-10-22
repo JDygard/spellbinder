@@ -3,12 +3,33 @@ import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import { useDispatch } from "react-redux";
 import { setInitialPlayerData, updateCharacters } from "../store/slices/playerSlice";
+import { RootState } from "../store/store";
+import { Socket } from "socket.io-client";
 
-const SocketContext = createContext();
+const SocketContext = createContext<Socket | null>(null);
 
-export const SocketProvider = ({ children }) => {
-  const [socket, setSocket] = useState(null);
-  const token = useSelector((state) => state.auth.token);
+const dummySocket: Socket = {
+  id: '',
+  connected: false,
+  disconnected: true,
+  connect: () => {},
+  disconnect: () => {},
+  emit: () => {},
+  on: () => {},
+  off: () => {},
+  once: () => {},
+  listeners: () => [],
+  hasListeners: () => false,
+  removeListener: () => {},
+  removeAllListeners: () => {},
+  // Add other methods as needed
+} as unknown as Socket;
+
+export const SocketProvider = (
+  { children }: { children: React.ReactNode }
+) => {
+  const [socket, setSocket] = useState<Socket>(dummySocket);
+  const token = useSelector((state: RootState) => state.auth.token);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,7 +53,7 @@ export const SocketProvider = ({ children }) => {
 
       return () => {
         newSocket.disconnect();
-        setSocket(null);
+        setSocket(dummySocket);
       };
     }
   }, [token]);

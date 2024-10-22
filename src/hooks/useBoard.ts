@@ -26,7 +26,8 @@ const useBoard = () => {
   const [tempSelectedLetters, setTempSelectedLetters] = useState<SelectedLetter[]>([]);
 
   const socket = useSocket();
-
+  if (!socket) return null;
+  
   const generateBoard = useCallback(() => {
     let size = 4;
     socket.emit("generateBoard", size);

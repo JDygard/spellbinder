@@ -15,6 +15,8 @@ const ComboSidebar = () => {
   const [comboProgress, setComboProgress] = useState<Progress[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  if (!socket) {return null;}
+  
   useEffect(() => {
     socket.on('gameStateUpdate', (gameState: GameState) => {
       // Extract combos and gamelog from gameState
