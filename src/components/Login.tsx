@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Login.css';
 import { useDispatch } from "react-redux";
-import { login } from "../store/slices/gameSlice";
+import { setInitialState } from "../store/slices/authSlice"; // Changed from gameSlice
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -11,9 +11,22 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    if (localStorage.getItem('token')) {
-        navigate('/');
-    }
+    // Check for existing token on component mount
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const refreshToken = localStorage.getItem('refreshToken');
+            
+            dispatch(setInitialState({
+                loggedIn: true,
+                user,
+                token,
+                refreshToken
+            }));
+            navigate('/');
+        }
+    }, [dispatch, navigate]);
 
     const handleLogin = async () => {
         try {
@@ -29,12 +42,21 @@ const Login = () => {
                 const data = await response.json();
                 const token = data.accessToken;
                 const refreshToken = data.refreshToken;
-                localStorage.setItem('token', token); // Save token to local storage
-                localStorage.setItem('refreshToken', refreshToken); // Save refresh token to local storage
-                localStorage.setItem('user', JSON.stringify(data.user)); // Save user object to local storage
-                console.log('Logged in successfully:', data.user);
-                // Save the token and redirect the user to the dashboard or character selection screen
-                dispatch(login());
+                
+                // Save to localStorage
+                localStorage.setItem('token', token);
+                localStorage.setItem('refreshToken', refreshToken);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                // Update Redux state
+                dispatch(setInitialState({
+                    loggedIn: true,
+                    user: data.user,
+                    token,
+                    refreshToken
+                }));
+
+                // Navigate after state is updated
                 navigate('/');
             } else {
                 console.error('Login failed:', response.statusText);
@@ -57,7 +79,6 @@ const Login = () => {
             if (response.ok) {
                 const newUser = await response.json();
                 console.log('Registered successfully:', newUser);
-                // Show a message and change the form back to the login mode
                 setIsRegistering(false);
             } else {
                 console.error('Registration failed:', response.statusText);
@@ -74,7 +95,7 @@ const Login = () => {
     return (
         <div className="login-container">
             <h1>{isRegistering ? 'Register' : 'Login'}</h1>
-            <form>
+            <form onSubmit={(e) => e.preventDefault()}>
                 <input
                     type="text"
                     placeholder="Username"
@@ -88,7 +109,7 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
-                    type="button"
+                    type="submit"
                     onClick={isRegistering ? handleRegister : handleLogin}
                 >
                     {isRegistering ? 'Register' : 'Login'}
