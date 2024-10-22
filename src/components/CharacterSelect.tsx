@@ -103,7 +103,7 @@ const CharacterSelect = () => {
         // Remove any previous listeners to prevent duplicates
         socket.off('playerData');
         socket.off('error');
-        socket.off('createCharacterError'); // Add specific error event
+        socket.off('createCharacterError');
 
         socket.on('playerData', (data: any) => {
           console.log('Received player data:', data);
@@ -145,9 +145,6 @@ const CharacterSelect = () => {
       setError('Please enter both name and class for the new character');
     }
   };
-
-  // Debug: Add component render logging
-  console.log('CharacterSelect rendering with characters:', characters);
 
   return (
     <div className="flex gap-6 p-6">
