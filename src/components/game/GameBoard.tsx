@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/GameBoard.css";
-import useBoard from "../../hooks/useBoard";
+import useBoard, { Letter } from "../../hooks/useBoard";
 import useSelectedLetters from "../../hooks/useSelectedLetters";
 import { useSocket } from "../../utils/SocketContext";
 import LetterTile from "./LetterTile";
@@ -9,15 +9,19 @@ const GameBoard = () => {
   const [inputValue, setInputValue] = useState("");
   const [wordIsValid, setWordIsValid] = useState(true);
   const { selectedLetters, handleInputChange } = useSelectedLetters();
-  const { board, generateBoard, setTempSelectedLetters } = useBoard();
 
+  const boardHook = useBoard();
   const socket = useSocket();
-  if (!socket) return null;
+  const { board, generateBoard, setTempSelectedLetters } = boardHook;
+
   
   const submitWord = () => {
-    if (!wordIsValid) return;
-
-    if (inputValue === "") return;
+    if (
+      !wordIsValid || 
+      !socket || 
+      !boardHook || 
+      inputValue === ""      
+    ) return;
 
     const submittedLetters = selectedLetters.map(
       (pos) => board[pos.row][pos.col]
@@ -41,7 +45,7 @@ const GameBoard = () => {
 
   return (
     <div className="game-board">
-      {board.map((row, rowIndex) => (
+      {board.map((row: Letter[], rowIndex: number) => (
         <div key={rowIndex} className="row">
           {row.map(({ letter, key, effect }, colIndex) => (
             <LetterTile

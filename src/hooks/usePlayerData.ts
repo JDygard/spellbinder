@@ -5,13 +5,14 @@ import { useSocket } from '../utils/SocketContext';
 import { RootState } from '../store/store';
 
 const usePlayerData = () => {
+  const socket = useSocket();
   const loggedIn = useSelector((state: RootState) => state.auth.loggedIn);
   const dispatch = useDispatch();
 
+  if (!socket) return null;
+
   useEffect(() => {
     if (loggedIn) {
-      const socket = useSocket();
-
       socket.emit('requestCharacters');
 
       socket.on('characters', (characters: Character[]) => {

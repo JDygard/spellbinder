@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setBoard, replaceLetters, clearSelectedLetters } from "../store/slices/gameSlice";
 import { useSocket } from "../utils/SocketContext";
@@ -16,35 +16,39 @@ export interface Letter {
   effect: Effect;
 }
 
-interface Board {
-  board: Letter[];
+interface UseBoardResult {
+  board: Letter[][];
+  generateBoard: () => void;
+  replaceSelectedLetters: (selectedLetters: SelectedLetter[]) => void;
+  setTempSelectedLetters: React.Dispatch<React.SetStateAction<SelectedLetter[]>>;
 }
 
-const useBoard = () => {
+const useBoard = (): UseBoardResult | null => {
   const dispatch = useDispatch();
   const board = useSelector((state: RootState) => state.game.board);
   const [tempSelectedLetters, setTempSelectedLetters] = useState<SelectedLetter[]>([]);
 
   const socket = useSocket();
-  if (!socket) return null;
   
   const generateBoard = useCallback(() => {
+    if (!socket) return;
     let size = 4;
     socket.emit("generateBoard", size);
   },[socket]);
 
   const replaceSelectedLetters = useCallback((selectedLetters: SelectedLetter[]) => {
+    if (!socket) return;
     socket.emit("replaceSelectedLetters", { selectedLetters });
   }, [socket]);
 
   // Listen for events from the server
   useEffect(() => {
     if (socket) {
-      socket.on("newBoard", (newBoard: Board) => {
+      socket.on("newBoard", (newBoard: Letter[][]) => {
         dispatch(setBoard(newBoard));
       });
 
-      socket.on("updatedBoard", (updatedBoard: Board) => {
+      socket.on("updatedBoard", (updatedBoard: Letter[][]) => {
         dispatch(replaceLetters(updatedBoard));
       });
 

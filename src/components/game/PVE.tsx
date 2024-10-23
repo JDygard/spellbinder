@@ -37,9 +37,9 @@ const PVE = () => {
   const [currentMonster, setCurrentMonster] = useState<Monster>(initialMonster);
   const socket = useSocket();
 
-  if (!socket) {return null;};
 
   useEffect(() => {
+    if (!socket) return;
     socket.on('challengeList', (data: Challenge[]) => {
       // console.log(data) we are in the middle of testing the challenges to see if they are being received
       setChallengeList(data);

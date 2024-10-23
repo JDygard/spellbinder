@@ -6,8 +6,7 @@ import { Provider } from 'react-redux';
 import { loadInitialState } from './store/slices/loadInitialState';
 import store from './store/store';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Fallback } from './utils/Fallback';
-"use client"; // required for class components, which error boundaries require
+import Fallback from './utils/Fallback';
 
 store.dispatch(loadInitialState());
 const root = ReactDOM.createRoot(document.getElementById('root'));
